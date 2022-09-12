@@ -1098,24 +1098,18 @@ public final class CachedAppOptimizer {
         FileReader fr = null;
 
         try {
-            String path = "/sys/fs/cgroup/uid_0/cgroup.freeze";
+            String path = "/dev/freezer/frozen/freezer.killable";
             Slog.d(TAG_AM, "Checking cgroup freezer: " + path);
             fr = new FileReader(path);
-            char state = (char) fr.read();
+            int i = fr.read();
 
-            if (state == '1' || state == '0') {
+            if ((char) i == '1') {
                 // Also check freezer binder ioctl
                 Slog.d(TAG_AM, "Checking binder freezer ioctl");
                 getBinderFreezeInfo(Process.myPid());
                 // Check if task_profiles.json contains invalid profiles
                 Slog.d(TAG_AM, "Checking freezer profiles");
                 supported = isFreezerProfileValid();
-                // This is a workaround after reverting the cgroup v2 uid/pid hierarchy due to
-                // http://b/179006802.
-                // TODO: remove once the uid/pid hierarchy is restored
-                if (supported) {
-                    enableFreezerInternal(true);
-                }
             } else {
                 Slog.e(TAG_AM, "Unexpected value in cgroup.freeze");
             }
