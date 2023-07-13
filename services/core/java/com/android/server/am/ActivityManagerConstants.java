@@ -35,6 +35,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.PowerExemptionManager;
 import android.os.SystemClock;
+import android.os.SystemProperties;
 import android.provider.DeviceConfig;
 import android.provider.DeviceConfig.OnPropertiesChangedListener;
 import android.provider.DeviceConfig.Properties;
